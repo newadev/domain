@@ -36,7 +36,7 @@ on:
           - 24
           - 25
       batch_size:
-        description: 'Number of batches to run (Letters: 1-26, Digits: 1-10, Alphanumeric: 1-36)'
+        description: 'Number of batches to run (Letters: 1-26, Digits: 27-36, Alphanumeric: 1-36)'
         required: false
         default: '10'
         type: choice
