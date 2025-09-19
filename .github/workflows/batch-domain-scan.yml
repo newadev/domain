@@ -106,6 +106,7 @@ on:
           - .io
           - .ai
           - .li
+          - .me
           - .nc.me
       domain_length:
         description: 'Domain name length'
