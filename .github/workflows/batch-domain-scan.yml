@@ -391,6 +391,11 @@ jobs:
           echo "Special status domains: $SPECIAL_COUNT" >> combined_results/summary.txt
           echo "" >> combined_results/summary.txt
           echo "Generated at: $(date)" >> combined_results/summary.txt
+
+      - name: Re-summarize with dedup, rewrite and union checks
+        run: |
+          # Use Python summarizer to produce mutually exclusive counts and union size
+          python3 summarize_combined_results.py --dir combined_results --available available_domains_all.txt --registered registered_domains_all.txt --special special_status_domains_all.txt --summary summary.txt --rewrite
       
       - name: Upload combined results
         uses: actions/upload-artifact@v4
@@ -408,10 +413,10 @@ jobs:
           echo "- Pattern: ${{ needs.prepare.outputs.pattern }}" >> $GITHUB_STEP_SUMMARY
           echo "- Batches: ${{ needs.prepare.outputs.batch_start }} to $(( ${{ needs.prepare.outputs.batch_start }} + ${{ needs.prepare.outputs.batch_size }} - 1))" >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
-          echo "### Summary" >> $GITHUB_STEP_SUMMARY
-          echo "- Available domains: $(wc -l < combined_results/available_domains_all.txt)" >> $GITHUB_STEP_SUMMARY
-          echo "- Registered domains: $(wc -l < combined_results/registered_domains_all.txt)" >> $GITHUB_STEP_SUMMARY
-          echo "- Special status domains: $(grep -v '^#' combined_results/special_status_domains_all.txt | grep -v '^$' | wc -l || echo "0")" >> $GITHUB_STEP_SUMMARY
+          echo "### Summary (deduped & exclusive)" >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
+          cat combined_results/summary.txt >> $GITHUB_STEP_SUMMARY
+          echo '```' >> $GITHUB_STEP_SUMMARY
           echo "" >> $GITHUB_STEP_SUMMARY
           echo "### Sample Available Domains" >> $GITHUB_STEP_SUMMARY
           echo '```' >> $GITHUB_STEP_SUMMARY

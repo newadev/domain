@@ -198,7 +198,12 @@ go run main.go -config config/myconfig.toml
   - `available_domains_all.txt`: 所有可用域名
   - `registered_domains_all.txt`: 所有已注册域名
   - `special_status_domains_all.txt`: 所有特殊状态域名
-  - `summary.txt`: 详细的扫描报告
+  - `summary.txt`: 详细的扫描报告（已去重并确保分类互斥，包含并集总量与期望空间大小校验）
+
+> 说明：汇总阶段会调用 `summarize_combined_results.py` 对三个文件做规范化处理：
+> - 特殊状态文件仅取首列域名并去重（忽略注释与空行）。
+> - 统计时保证三类互斥（已注册 = 已注册原始集合 - 特殊状态）。
+> - 计算三类并集的唯一域名总量，并与理论空间大小（如 Pattern=`D` 且长度=3 时为 26^3）进行校验。
 
 #### 特殊状态域名说明
 - 存储格式：每行 `domain status reason`
